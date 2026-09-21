@@ -4,9 +4,6 @@ metadata:
   name: hoshid
   namespace: hoshid
   annotations:
-    # マイグレーション（wave 1）が終わってから起動する。スキーマが古いまま
-    # 新しいコードを立ち上げると「一部の画面だけ 500」という分かりにくい
-    # 壊れ方をする。
     argocd.argoproj.io/sync-wave: "2"
 spec:
   replicas: 2
@@ -24,15 +21,12 @@ spec:
     spec:
       securityContext:
         runAsNonRoot: true
-        # 数値で指定する。名前だと kubelet が解決できず起動しない。
         runAsUser: 1000
         runAsGroup: 1000
         seccompProfile:
           type: RuntimeDefault
       containers:
         - name: app
-          # タグは kustomization.yaml の images で差し替わる。
-          # 本番が追うのは vX.Y.Z（中身が入れ替わらないタグ）。
           image: ghcr.io/ibuki-hum4/hoshid:v0.1.1
           imagePullPolicy: IfNotPresent
 
@@ -40,14 +34,17 @@ spec:
             - name: http
               containerPort: 3000
 
+          # IPv6 (::) で Listen させるための環境変数を追加
+          env:
+            - name: HOSTNAME
+              value: "::"
+
           envFrom:
             - configMapRef:
                 name: hoshid-config
             - secretRef:
                 name: hoshid-secrets
 
-          # 起動時に鍵の点検が走る（instrumentation.ts）。DB が遅れていても
-          # 落ちない作りだが、startup probe で余裕を持たせる。
           startupProbe:
             httpGet:
               path: /api/health
@@ -61,8 +58,6 @@ spec:
               port: http
             periodSeconds: 10
 
-          # liveness は DB を見ない方が安全。DB が落ちただけで Pod が
-          # 再起動を繰り返しても何も直らない。TCP で生死だけ見る。
           livenessProbe:
             tcpSocket:
               port: http
@@ -72,8 +67,6 @@ spec:
           resources:
             requests:
               cpu: 100m
-              # sharp と Argon2id がメモリを使う。Argon2id は1回あたり 19MiB を
-              # 確保する設定なので、同時ログインが重なると一気に伸びる。
               memory: 512Mi
             limits:
               memory: 1Gi
@@ -85,8 +78,6 @@ spec:
               drop: ["ALL"]
 
           volumeMounts:
-            # Next.js と sharp が一時ファイルを書く。ルートを読み取り専用に
-            # しているので、書ける場所を明示的に与える。
             - name: tmp
               mountPath: /tmp
             - name: next-cache
