@@ -19,7 +19,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: hoshid.skyia.jp
+    - host: hoshid.reeldev.jp
       http:
         paths:
           - path: /
@@ -31,5 +31,5 @@ spec:
                   number: 80
   tls:
     - hosts:
-        - hoshid.skyia.jp
+        - hoshid.reeldev.jp
       secretName: hoshid-tls
