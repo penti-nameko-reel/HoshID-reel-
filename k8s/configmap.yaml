@@ -10,6 +10,12 @@ data:
   # https://hoshid.skyia.jp/api/auth であって、この値そのものではない。
   BETTER_AUTH_URL: "https://hoshid.reeldev.jp"
 
+ BETTER_AUTH_TRUSTED_ORIGINS: "https://hoshid.reeldev.jp"
+
+  TRUSTED_PROXIES: "10.1.0.0/16"
+  NODE_ENV: "production"
+  NEXT_TELEMETRY_DISABLED: "1"
+
   # **Traefik の Pod が属する CIDR。** MicroK8s の既定の Pod CIDR
   # （Calico の 10.1.0.0/16）。k3s は 10.42.0.0/16 で別物なので、
   # 移すときは必ず確認する。
