@@ -13,6 +13,7 @@ resources:
   - ingress.yaml
   - migrate-job.yaml
   - external-secret.yaml
+  - pvc.yaml
   # 初代管理者。作り終えたら消してよい。
   - seed-admin-job.yaml
   - discord-sync-cronjob.yaml
