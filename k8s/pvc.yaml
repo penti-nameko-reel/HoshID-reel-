@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: hoshid-nfs-pvc
+  namespace: hoshid
+spec:
+  accessModes:
+    - ReadWriteMany # 複数 Pod から同時にアクセス可能にする
+  storageClassName: nfs-pvc # 確認できた StorageClass 名を指定
+  resources:
+    requests:
+      storage: 5Gi

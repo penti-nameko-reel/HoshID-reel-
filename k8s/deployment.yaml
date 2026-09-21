@@ -19,6 +19,16 @@ spec:
       labels:
         app: hoshid
     spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: tier
+                    operator: NotIn
+                    values:
+                      - mgmt
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
@@ -34,7 +44,6 @@ spec:
             - name: http
               containerPort: 3000
 
-          # IPv6 (::) で Listen させるための環境変数を追加
           env:
             - name: HOSTNAME
               value: "::"
@@ -78,13 +87,15 @@ spec:
               drop: ["ALL"]
 
           volumeMounts:
-            - name: tmp
+            # NFS ストレージへマウント
+            - name: nfs-storage
+              subPath: tmp
               mountPath: /tmp
-            - name: next-cache
+            - name: nfs-storage
+              subPath: next-cache
               mountPath: /app/.next/cache
 
       volumes:
-        - name: tmp
-          emptyDir: {}
-        - name: next-cache
-          emptyDir: {}
+        - name: nfs-storage
+          persistentVolumeClaim:
+            claimName: hoshid-nfs-pvc # お使いの NFS 用 PVC 名に合わせて変更してください
