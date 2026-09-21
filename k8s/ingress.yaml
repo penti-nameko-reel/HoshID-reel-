@@ -11,8 +11,13 @@ metadata:
   namespace: hoshid
   labels:
     name: hoshid
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    cert-manager.io/issue-temporary-certificate: "true"
+    acme.cert-manager.io/http01-edit-in-place: "true"
 spec:
-  ingressClassName: traefik
+  ingressClassName: nginx
   rules:
     - host: hoshid.skyia.jp
       http:
@@ -24,3 +29,7 @@ spec:
                 name: hoshid
                 port:
                   number: 80
+  tls:
+    - hosts:
+        - hoshid.skyia.jp
+      secretName: hoshid-tls
