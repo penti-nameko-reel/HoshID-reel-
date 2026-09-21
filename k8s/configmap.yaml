@@ -8,7 +8,7 @@ data:
   # **issuer になる値。** ここを変えると、繋がっている RP の設定を全て
   # 変えることになる。RP に渡す issuer は末尾に /api/auth が付いた
   # https://hoshid.skyia.jp/api/auth であって、この値そのものではない。
-  BETTER_AUTH_URL: "https://hoshid.skyia.jp"
+  BETTER_AUTH_URL: "https://hoshid.reeldev.jp"
 
   # **Traefik の Pod が属する CIDR。** MicroK8s の既定の Pod CIDR
   # （Calico の 10.1.0.0/16）。k3s は 10.42.0.0/16 で別物なので、
@@ -29,12 +29,12 @@ data:
 
   # さくらのメールボックス。587 は STARTTLS なので SECURE は false。
   # SMTP_USER と SMTP_PASS は対で Secret に入れる。
-  SMTP_HOST: "www1834.sakura.ne.jp"
+  SMTP_HOST: "smtp.gmail.com"
   SMTP_PORT: "587"
   SMTP_SECURE: "false"
-  MAIL_FROM: "HoshID <info@skyia.jp>"
+  MAIL_FROM: "HoshID <rielu1227@gmail.com>"
 
   # Discord のロール付与。ID は秘密ではない（Bot トークンだけが秘密）。
-  DISCORD_GUILD_ID: "1443079634605310076"
-  DISCORD_MEMBER_ROLE_ID: "1443103376245260348"
-  DISCORD_GUILD_INVITE_URL: "https://discord.gg/9QNrag6cMa"
+  DISCORD_GUILD_ID: "1551668897395118221"
+  DISCORD_MEMBER_ROLE_ID: "1551670153123471460"
+  DISCORD_GUILD_INVITE_URL: "https://discord.gg/wfSx4RnSgP"
