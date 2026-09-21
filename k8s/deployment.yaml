@@ -19,16 +19,16 @@ spec:
       labels:
         app: hoshid
     spec:
+      # tier: prod のノードにのみ配置を制限（必須条件）
       affinity:
         nodeAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: 100
-              preference:
-                matchExpressions:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
                   - key: tier
-                    operator: NotIn
+                    operator: In
                     values:
-                      - mgmt
+                      - prod
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
@@ -87,7 +87,6 @@ spec:
               drop: ["ALL"]
 
           volumeMounts:
-            # NFS ストレージへマウント
             - name: nfs-storage
               subPath: tmp
               mountPath: /tmp
@@ -98,4 +97,4 @@ spec:
       volumes:
         - name: nfs-storage
           persistentVolumeClaim:
-            claimName: hoshid-nfs-pvc # お使いの NFS 用 PVC 名に合わせて変更してください
+            claimName: hoshid-nfs-pvc
